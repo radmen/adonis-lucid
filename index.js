@@ -52,6 +52,15 @@ class Ioc {
 
 class Resolver {
   forDir () {
+    return {
+      resolveFunc: (binding) => {
+        if (typeof (binding) === 'function') {
+          return { instance: null, isClosure: true, method: binding }
+        }
+
+        throw new Error('Unsupported binding type')
+      }
+    }
   }
 }
 
