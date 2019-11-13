@@ -89,17 +89,17 @@ module.exports = function (configMap) {
     Models: {
       add (name, implementation) {
         implementation._bootIfNotBooted()
-        ioc.bind(`model:${name}`, implementation)
+        ioc.bind(name, implementation)
         return this
       },
 
       get (name) {
-        return ioc.use(`model:${name}`)
+        return ioc.use(name)
       },
 
       clear () {
         _.each(ioc._bindings, (value, name) => {
-          if (name.startsWith('model:')) {
+          if (Model.isPrototypeOf(value)) {
             delete ioc._bindings[name]
           }
         })

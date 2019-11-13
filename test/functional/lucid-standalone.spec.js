@@ -107,3 +107,31 @@ test.group('Database', (group) => {
     assert.deepEqual(stack, ['beforeCreate called'])
   })
 })
+
+test.group('Database | ioc string bindings in relation methods', () => {
+  const testMethods = [
+    ['hasOne'],
+    ['hasMany'],
+    ['belongsTo'],
+    ['belongsToMany'],
+    ['manyThrough', 'dummy']
+  ]
+
+  testMethods.forEach(([name, ...args]) => {
+    test((name), () => {
+      const User = class extends Model {
+        relation () {
+          return this[name]('User', ...args)
+        }
+
+        dummy () {
+          return this.hasMany('User')
+        }
+      }
+      Models.add('User', User)
+
+      const model = new (Models.get('User'))()
+      model.relation()
+    })
+  })
+})
